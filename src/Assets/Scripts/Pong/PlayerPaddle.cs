@@ -8,16 +8,15 @@ using UnityEngine.InputSystem;
 
 namespace ClassicGames.Pong
 {
-    public class PlayerPaddle : MonoBehaviour
+    public class PlayerPaddle : Paddle
     {
         private PlayerControls _playerControls;
-        private Rigidbody2D _rigidbody;
-        public float _speed = 2.0f;
 
-        private void Awake()
+        protected override void Awake()
         {
             _playerControls = new PlayerControls();
-            _rigidbody = GetComponent<Rigidbody2D>();
+
+            base.Awake();
         }
 
         private void OnEnable()
@@ -43,18 +42,12 @@ namespace ClassicGames.Pong
         private void OnMove(InputAction.CallbackContext context)
         {
             var moveDirection = context.ReadValue<Vector2>();
-            if (_rigidbody != null)
-            {
-                _rigidbody.velocity = moveDirection * _speed;
-            }
+            Direction = moveDirection;
         }
 
         private void OnMoveCancelled(InputAction.CallbackContext context)
         {
-            if (_rigidbody != null)
-            {
-                _rigidbody.velocity = Vector2.zero;
-            }
+            Direction = Vector2.zero;
         }
 
     }

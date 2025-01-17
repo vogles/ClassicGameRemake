@@ -5,6 +5,8 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField] private float _speed = 2f;
+    [SerializeField] private float _maxSpeed = 5f;
+    [SerializeField] private float _speedIncrement = 0.05f;
     [SerializeField] private float _contactDistance = 0.05f;
     [SerializeField] private ContactFilter2D _contactFilter;
 
@@ -15,6 +17,12 @@ public class Ball : MonoBehaviour
     {
         get => _direction;
         set => _direction = value;
+    }
+
+    public Vector2 Position
+    {
+        get => _rigidbody.position;
+        set => _rigidbody.position = value;
     }
 
     private void Awake()
@@ -42,6 +50,17 @@ public class Ball : MonoBehaviour
                 {
                     ReflectX();
                 }
+                else if (hitResultTag == "Respawn")
+                {
+                    if (hitResult.collider.name == "LeftBoundary")
+                    {
+                        FindObjectOfType<GameController>().ChangeState(GameController.GameState.LeftWon);
+                    }
+                    else
+                    {
+                        FindObjectOfType<GameController>().ChangeState(GameController.GameState.RightWon);
+                    }
+                }
             }
         }
   
@@ -51,10 +70,13 @@ public class Ball : MonoBehaviour
     public void ReflectY()
     {
         _direction.y *= -1;
+
     }
 
     public void ReflectX()
     {
         _direction.x *= -1;
+
+        _speed = Mathf.Min(_speed + _speedIncrement, _maxSpeed);
     }
 }

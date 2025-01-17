@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class Paddle : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Vector2 _direction = Vector2.zero;
+        public float _speed = 2.0f;
+    private Rigidbody2D _rigidbody;
+
+    public Vector2 Direction
     {
-        
+        get => _direction;
+        set => _direction = value;
+    }
+
+    public Vector2 Position
+    {
+        get => _rigidbody.position;
+    }
+
+    protected virtual void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void FixedUpdate()
     {
-        
+        if (_rigidbody != null)
+        {
+            _rigidbody.velocity = _direction * _speed;
+        }
     }
 }
